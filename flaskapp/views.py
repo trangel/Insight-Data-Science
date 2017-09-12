@@ -61,7 +61,7 @@ def AutismExpert_output():
   text = request.args.get('autism_query')
 
 # Find similar articles from model
-  the_result=query_model(text)
+  result_forums, result_articles = query_model(text)
 
 
 #    #just select the Cesareans  from the birth dtabase for the month that the user inputs
@@ -73,4 +73,4 @@ def AutismExpert_output():
 #  for i in range(0,query_results.shape[0]):
 #      births.append(dict(index=query_results.iloc[i]['index'], attendant=query_results.iloc[i]['attendant'], birth_month=query_results.iloc[i]['birth_month']))
 #      the_result = ModelIt(patient,births)
-  return render_template("output.html", births = births, the_result = the_result)
+  return render_template("output.html", births = births, result_forums = result_forums, result_articles = result_articles)

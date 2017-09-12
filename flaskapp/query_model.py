@@ -36,9 +36,14 @@ def query_model(query):
     import pickle
     import os
 
+    # Sources for forums:
+    forum_sources=["http://www.medhelp.org"]
+    # Sources for articles:
+    article_sources=["https://www.autismparentingmagazine.com/"]
+
     # Path to datafiles 
     path_to_data="flaskapp/data/"
-    db_fname=os.path.join(path_to_data,"AutismParentMagazine-posts-tokens.csv")
+    db_fname=os.path.join(path_to_data,"articles-n-forums-posts.csv")
     lsi_model_fname=os.path.join(path_to_data,"lsi-model.save")
     lsi_matsim_fname=os.path.join(path_to_data,"lsi-matsim.save") 
     tfidf_fname=os.path.join(path_to_data,"tfidf.save")    
@@ -65,10 +70,31 @@ def query_model(query):
     
     sims = matsim[vec_lsi]
     
-    result=""
+    count_forums=0; count_articles=0;
+    result_forums=""
+    result_articles=""
     for aid,score in sims:
         title=df['title'][aid]
-        #print("{}: {}".format(title,score))
+        source=df['source'][aid]
         sentence="{}: {}\n".format(title,score)
-        result=result+sentence
-    return result 
+        print(aid,title,source)
+        #
+        # If this is from forums
+        #
+        if ( source in forum_sources ):
+            if count_forums < 3 :
+                result_forums=result_forums+sentence
+                count_forums=count_forums+1
+            if ( count_forums ==  3  ) & ( count_articles == 3 ):
+                return result_forums, result_articles
+        # 
+        # If this is from articles
+        #
+        elif ( source in article_sources ):
+            print("Articles")
+            if count_articles < 3 :
+                result_articles=result_articles+sentence
+                count_articles=count_articles+1
+            if ( count_forums ==  3  ) & ( count_articles == 3 ):
+                return result_forums, result_articles
+    return result_forums, result_articles 
