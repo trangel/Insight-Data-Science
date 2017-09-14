@@ -74,3 +74,4 @@ def AutismExpert_output():
 #      births.append(dict(index=query_results.iloc[i]['index'], attendant=query_results.iloc[i]['attendant'], birth_month=query_results.iloc[i]['birth_month']))
 #      the_result = ModelIt(patient,births)
   return render_template("output.html", births = births, result_forums = result_forums, result_articles = result_articles)
+

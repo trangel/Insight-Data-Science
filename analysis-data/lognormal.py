@@ -2,16 +2,17 @@
 def lognormal(x, sigma,mu):
     import numpy as np
     from math import sqrt, pi
-    eta=0.001
+    eta=0.01
     p = 1.0/(x*sigma*sqrt(2.0*pi)+eta)
-    c=(np.log(x+eta)-mu)**2/(2.0*sigma**2+eta)
+    c=(np.log(np.abs(x+eta))-mu)**2/(2.0*sigma**2+eta)
     ff=p*np.exp(-1.0*c)
     return ff
 
 def lognormal_stats(sigma,mu):
     from math import exp
+    eta=0.01
     mean=exp(mu+sigma**2/2.0)
-    variance=(exp(sigma**2)-1.0)*exp(2.0*mu+sigma**2)
+    variance=(exp(sigma**2)-1.0)*exp(2.0*mu+sigma**2+eta)
     return mean,variance
 
 # Define decaying exp.
