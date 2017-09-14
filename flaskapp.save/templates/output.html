@@ -58,7 +58,7 @@
 
 <div class="container">
     <div class="starter-template">
-        <h2>Output Page</h2>
+        <!--<h2>Output Page</h2>-->
         <p>Enter a question related to autism</p>
     </div>
 
@@ -79,6 +79,9 @@
 
   </div> <!-- /.container-->
 
+
+<!-- Below SQL Table -->
+<!--
     <div class="container">
       <div class="starter-template">
         <h3>Results:</h3>
@@ -93,13 +96,35 @@
       </table>
 
 
-     </div><!-- /.container -->
+     </div>
+-->
+<!-- /.container -->
 
+    <br><br>
     <div class="container">
       <div class="starter-template">
-        <h3>Related posts:</h3>
-        <p class="lead">Forums.<br>The result is {{result_forums}}</p>
+        <h1>Related posts </h1>
+        <br>
+<!--        <p class="lead">Forums.<br>The result is {{result_forums}}</p>
         <p class="lead">Articles.<br>The result is {{result_articles}}</p>
+-->
+     <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-lg-4">
+          <h2>Articles</h2>
+          <p> {{result_articles}}
+          </p>
+          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-lg-4">
+          <h2>Forum posts</h2>
+          <p> {{result_forums}} </p>
+          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
+       </div>
+      </div>
+
+
+
       </div>
 
 
@@ -108,7 +133,6 @@
 
 
      </div><!-- /.container -->
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

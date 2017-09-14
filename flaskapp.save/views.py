@@ -14,7 +14,7 @@ from query_model import query_model
 
 user = 'rangel' #add your username here (same as previous postgreSQL)            
 host = 'localhost'
-dbname = 'birth_db'
+dbname = 'autism-docs'
 db = create_engine('postgres://%s%s/%s'%(user,host,dbname))
 con = None
 con = psycopg2.connect(database = dbname, user = user)
@@ -26,30 +26,16 @@ def index():
        title = 'Home', user = { 'nickname': 'Miguel' },
        )
 
-@app.route('/db')
-def birth_page():
-    sql_query = """                                                             
-                SELECT * FROM birth_data_table WHERE delivery_method='Cesarean'\
-;                                                                               
-                """
-    query_results = pd.read_sql_query(sql_query,con)
-    births = ""
-    print ( query_results[:10] )
-    for i in range(0,10):
-        births += query_results.iloc[i]['birth_month']
-        births += "<br>"
-    return births
-
 @app.route('/db_fancy')
 def AutismExpert_page_fancy():
     sql_query = """
-               SELECT index, attendant, birth_month FROM birth_data_table WHERE delivery_method='Cesarean';
+               SELECT title,href,text FROM \"articles-n-forums-posts\" WHERE title LIKE '%autism%';
                 """
     query_results=pd.read_sql_query(sql_query,con)
-    births = []
+    autism_docs = []
     for i in range(0,query_results.shape[0]):
-        births.append(dict(index=query_results.iloc[i]['index'], attendant=query_results.iloc[i]['attendant'], birth_month=query_results.iloc[i]['birth_month']))
-    return render_template('AutismExpert.html',births=births)
+        autism_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text=query_results.iloc[i]['text']))
+    return render_template('view_db.html',autism_docs=autism_docs)
 
 @app.route('/input')
 def AutismExpert_input():
