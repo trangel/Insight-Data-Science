@@ -1,5 +1,11 @@
 from collections import defaultdict
 from gensim import corpora, models, similarities
+
+def list_to_str(list1):
+    str1 = ','.join(str(e) for e in list1)
+    return str1
+
+
 def make_dictionary(documents):
     """
     construct a dictionary, i.e. mapping btwn word ids and their freq of occurence in the whole corpus
@@ -52,7 +58,7 @@ def query_model(query):
     # Get categories and ids from dataset
     df = pd.read_csv(db_fname,index_col=0)
     df.head(2)
-    ids=df.index
+    #ids=df.index
     
     # Read models and evaluate the score
     lsi = models.LsiModel.load(lsi_model_fname)
@@ -71,30 +77,28 @@ def query_model(query):
     sims = matsim[vec_lsi]
     
     count_forums=0; count_articles=0;
-    result_forums=""
-    result_articles=""
+    result_forums=[]
+    result_articles=[]
     for aid,score in sims:
-        title=df['title'][aid]
+        #title=df['title'][aid]
         source=df['source'][aid]
-        sentence="{}: {}\n".format(title,score)
-        print(aid,title,source)
         #
         # If this is from forums
         #
         if ( source in forum_sources ):
             if count_forums < 3 :
-                result_forums=result_forums+sentence
+                result_forums.append(aid)
                 count_forums=count_forums+1
             if ( count_forums ==  3  ) & ( count_articles == 3 ):
-                return result_forums, result_articles
+                return list_to_str(result_forums), list_to_str(result_articles)
         # 
         # If this is from articles
         #
         elif ( source in article_sources ):
-            print("Articles")
             if count_articles < 3 :
-                result_articles=result_articles+sentence
+                result_articles.append(aid)
                 count_articles=count_articles+1
             if ( count_forums ==  3  ) & ( count_articles == 3 ):
-                return result_forums, result_articles
-    return result_forums, result_articles 
+                return list_to_str(result_forums), list_to_str(result_articles)
+
+    return list_to_str(result_forums), list_to_str(result_articles)

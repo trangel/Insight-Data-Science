@@ -47,19 +47,27 @@ def AutismExpert_output():
   text = request.args.get('autism_query')
 
 # Find similar articles from model
+# This returns a list of article ids
   result_forums, result_articles = query_model(text)
 
-
-  
-  #article_ids=",".join(article_ids)
- 
-  query = "SELECT title, text, href FROM \"articles-n-forums-posts\" WHERE index = 2 "
-  print ( query )
+# 
+# Query db
+#
+# Results from forums:
+  query = "SELECT title, text, href FROM \"articles-n-forums-posts\" WHERE index IN ({})".format(result_forums)
   query_results=pd.read_sql_query(query,con)
-  print ( query_results )
-  autism_docs = []
+# Convert result to list of dictionaries to handle in HTML page:
+  forum_docs = []
   for i in range(0,query_results.shape[0]):
-      autism_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text=query_results.iloc[i]['text']))
+      forum_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text=query_results.iloc[i]['text']))
+#
+# Results from articles:
+  query = "SELECT title, text, href FROM \"articles-n-forums-posts\" WHERE index IN ({})".format(result_articles)
+  query_results=pd.read_sql_query(query,con)
+# Convert result to list of dictionaries to handle in HTML page:
+  article_docs = []
+  for i in range(0,query_results.shape[0]):
+      article_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text=query_results.iloc[i]['text']))
 
-  return render_template("output.html", autism_docs=autism_docs, result_forums = result_forums, result_articles = result_articles)
+  return render_template("output.html", autism_docs=forum_docs, forum_docs = forum_docs, article_docs = article_docs)
 

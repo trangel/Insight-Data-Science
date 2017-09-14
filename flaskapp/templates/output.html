@@ -79,7 +79,7 @@
 
   </div> <!-- /.container-->
 
-
+<!--
     <div class="container">
       <table class="table table-hover">
       <tr><th>title</th><th>text</th><th>href</th></tr>
@@ -87,7 +87,7 @@
       <tr><td>{{ doc['title'] }}</td><td>{{ doc['text']}}</td><td> {{ doc['href'] }}</td></tr>
       {% endfor %}
       </table>
-
+-->
 
      </div>
 
@@ -96,7 +96,9 @@
     <br><br>
     <div class="container">
       <div class="starter-template">
+<!--
         <h1>Related posts </h1>
+-->
         <br>
 <!--        <p class="lead">Forums.<br>The result is {{result_forums}}</p>
         <p class="lead">Articles.<br>The result is {{result_articles}}</p>
@@ -105,14 +107,25 @@
       <div class="row">
         <div class="col-lg-4">
           <h2>Articles</h2>
-          <p> {{result_articles}}
-          </p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
+     <br>
+      {% for doc in article_docs %}
+          <h3>{{ doc['title'] }}</h3>
+          {{ doc['text']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">View details &raquo;</a></p>
+     <br>
+      {% endfor %}
+      
         </div>
         <div class="col-lg-4">
           <h2>Forum posts</h2>
-          <p> {{result_forums}} </p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
+     <br>
+      {% for doc in autism_docs %}
+          <h3>{{ doc['title'] }}</h3>
+          {{ doc['text']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">View details &raquo;</a></p>
+     <br>
+      {% endfor %}
+      
        </div>
       </div>
 
