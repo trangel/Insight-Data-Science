@@ -44,12 +44,12 @@ def make_lsi_similarity_matrix(tfidf_corpus, dictionary,num_topics):
     matsim = similarities.MatrixSimilarity(lsi[tfidf_corpus], num_best=1000)
     return(matsim,lsi)
 
-def make_lda_similarity_matrix(corpus, dictionary,num_topics):
+def make_lda_similarity_matrix(corpus, dictionary,num_topics,num_iter):
     """
     Latent Dirichlet Allocation (LDA) model
     """
     # construct model
-    lda = models.ldamodel.LdaModel(corpus, id2word=dictionary, num_topics=num_topics)
+    lda = models.ldamodel.LdaModel(corpus, id2word=dictionary, num_topics=num_topics,iterations=num_iter)
     #lda.save('lda-model.save')
     # create similarity matrix
     matsim = similarities.MatrixSimilarity(lda[corpus], num_best=1000)
