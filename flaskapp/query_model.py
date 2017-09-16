@@ -51,30 +51,47 @@ def query_model(query):
     path_to_data="flaskapp/data/"
     db_fname=os.path.join(path_to_data,"articles-n-forums-posts.csv")
     lsi_model_fname=os.path.join(path_to_data,"lsi-model.save")
-    lsi_matsim_fname=os.path.join(path_to_data,"lsi-matsim.save") 
+    lsi_matsim_fname=os.path.join(path_to_data,"lsi-matsim.save")
+    # 
+    lda_model_fname=os.path.join(path_to_data,"lda-model-100.save")
+    lda_matsim_fname=os.path.join(path_to_data,"lda-matsim-100.save")
+    # 
     tfidf_fname=os.path.join(path_to_data,"tfidf.save")    
     dictionary_fname=os.path.join(path_to_data,"dictionary.save")
 
     # Get categories and ids from dataset
     df = pd.read_csv(db_fname,index_col=0)
-    df.head(2)
+    #df.head(2)
     #ids=df.index
     
     # Read models and evaluate the score
-    lsi = models.LsiModel.load(lsi_model_fname)
     tfidf = models.TfidfModel.load(tfidf_fname)
     dictionary = pickle.load(open(dictionary_fname, "rb"))
-    matsim = similarities.MatrixSimilarity.load(lsi_matsim_fname)
+
+    #
+    model="lsi"
+
+    if model == "lsi":
+        lsi = models.LsiModel.load(lsi_model_fname)
+        matsim = similarities.MatrixSimilarity.load(lsi_matsim_fname)
+    if model == "lda":
+        lda = models.LdaModel.load(lda_model_fname)
+        matsim = similarities.MatrixSimilarity.load(lda_matsim_fname)
     
     # Tokenize data
     tokenizer = nltk.RegexpTokenizer(r'\w+')
     text = query.lower()
     ttext = tokenizer.tokenize(text)
-    vec_bow = dictionary.doc2bow(query.lower().split())
+    vec_bow = dictionary.doc2bow(ttext)
     
-    vec_lsi = lsi[tfidf[vec_bow]] # convert the query to LSI space
-    
-    sims = matsim[vec_lsi]
+    if model == "lsi":
+	# convert the query to LSI space
+        vec_lsi = lsi[tfidf[vec_bow]] 
+        sims = matsim[vec_lsi]
+    if model == "lda":
+	# convert the query to LDA space
+        vec_lda = lda[vec_bow] 
+        sims = matsim[vec_lda]
     
     count_forums=0; count_articles=0;
     result_forums=[]

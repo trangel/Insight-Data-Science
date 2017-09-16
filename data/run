@@ -1,0 +1,7 @@
+from shutil import copyfile
+
+for ii in range(110,200,10):
+    file1="lda-matism-{}.save".format(ii)
+    file2="lda-matsim-{}.save".format(ii)
+    copyfile(file1, file2)
+

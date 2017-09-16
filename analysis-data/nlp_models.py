@@ -79,31 +79,56 @@ def get_model_score(ids,matsim,categories):
 #
 # See validate model.ipynb
 #
-def get_model_score_wforums(ids,matsim,categories):
+def get_model_score_wforums(ids,matsim,categories,titles):
     """ Function to evalate the score for a given model, following the equation defined in validate_model.ipynb """
     num_predictions=3
     model_score=0
     N=0
     for id,doc in zip(ids,matsim.index):
         sims=matsim[doc]
-        category1=categories[id]
-        if category1 == 'forums':
+        category1=eval(categories[id])
+        title1=titles[id]
+        if 'forums' in category1:
             continue
         i_pred=0
         for other_id,score in sims:
 
             #print("ID {} OTHER_ID {} SCORE {}".format(id,other_id,score))
-            category2=categories[other_id]
-            if category2 == 'forums':
+            category2=eval(categories[other_id])
+            title2=titles[other_id]
+            if 'forums' in category2:
                 continue
-            i_pred=i_pred+1
 
-            if i_pred ==  num_predictions+2 :
-                break
-            #print("ID {} category{} - ID {} category{}, score {}".format(id,category1,other_id,category2,score))
-            N=N+1
+            # Remove categories which are too general for this test:
+            cats_to_remove=['category-magazine-issues','category-general',
+                            'category-autism-books','category-podcast','category-autism-news',
+                            'category-personal-narrative','autism_advocacy']
+
+            for cat in cats_to_remove:
+                category1=set(category1)
+                if cat in category1:
+                    category1.remove(cat)
+                category2=set(category2)
+                if cat in category2:
+                    category2.remove(cat)
+            
+            if (len(category1) == 0) | (len(category2) == 0):
+                continue
+            # Remove also 'magazine issues' are these are general articles:
+                
             if id != other_id:
-                if category1 == category2:
+                i_pred=i_pred+1
+
+                if i_pred ==  num_predictions+1 :
+                    break
+                #print("title1 {}\n title2{}".format(title1,title2))
+                #print("ID {} category{} \n ID {} category {}, score {}".format(id,category1,other_id,category2,score))
+                N=N+1
+                if any( x in category2 for x in category1):
                     model_score+=1
+                #else:
+                #    print("ID {} category{} \n ID {} category {}, score {}".format(id,category1,other_id,category2,score))
+                #print("model_score {}, N {}".format(model_score,N))
     model_score=model_score/N
-    return model_score  
+    return model_score
+
