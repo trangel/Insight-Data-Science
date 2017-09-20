@@ -62,7 +62,7 @@
       <form  action="/output" method="GET">
         <div class="form-group">
           <label for="autism_query">Query:</label>
-          <input type="text" id="autism_query" name='autism_query' placeholder="e.g. ">
+          <input type="text" id="autism_query" name='autism_query' placeholder="e.g. Potty training. ">
         </div> <!-- form-group -->
         <div>
           <button type="submit" class="btn btn-primary">Find related information</button>
@@ -83,14 +83,14 @@
           Top parent's concerns
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="http://127.0.0.1:5000/output?autism_query=what+is+the+best+professional+treatment+for+autism">What is the best professional treatment for autism?</a>
-          <a class="dropdown-item" href="http://127.0.0.1:5000/output?autism_query=How+can+I+help+my+child+to+make+friends%3F">How can I help my child to make friends?</a>
-          <a class="dropdown-item" href="http://127.0.0.1:5000/output?autism_query=What+about+siblings%3F">What about siblings?</a>
-          <a class="dropdown-item" href="http://127.0.0.1:5000/output?autism_query=Toilet+training">Toilet training</a>
-          <a class="dropdown-item" href="http://127.0.0.1:5000/output?autism_query=How+to+handle+tantrums+and+meltdowns%3F">How to handle tantrums and meltdowns?</a>
+          {% for question in question_list %}
+          <a class="dropdown-item" href={{question['href']}}>{{question['text']}}</a>
+          {% endfor %}
         </div>
       </div> <!-- dropdown -->
     </div> <!-- container -->
+   <br>
+   You asked: <br><h4> {{this_query}}</h4>
   </div> <!-- col -->
   </div> <!-- row -->
   </div>
@@ -120,9 +120,9 @@
           <h2>Articles</h2>
      <br>
       {% for doc in article_docs %}
-          <h3>{{ doc['title'] }}</h3>
-          {{ doc['text']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">View details &raquo;</a></p>
+          <h4>{{ doc['title'] }}</h4>
+          {{ doc['text_short']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
      <br>
       {% endfor %}
       
@@ -131,9 +131,9 @@
           <h2>Forum posts</h2>
      <br>
       {% for doc in autism_docs %}
-          <h3>{{ doc['title'] }}</h3>
-          {{ doc['text']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">View details &raquo;</a></p>
+          <h4>{{ doc['title'] }}</h4>
+          {{ doc['text_short']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
      <br>
       {% endfor %}
       

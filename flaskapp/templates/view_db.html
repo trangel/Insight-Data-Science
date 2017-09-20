@@ -65,7 +65,7 @@
 <table class="table table-hover"> 
 <tr><th>title</th><th>text</th><th>link</th></tr> 
 {% for doc in autism_docs %} 
-<tr><td>{{ doc['title'] }}</td><td>{{ doc['text']}}</td><td> <a href="{{ doc['href'] }}">{{doc['href']}}</a></td></tr> 
+<tr><td>{{ doc['title'] }}</td><td>{{ doc['text_short']}}</td><td> <a href="{{ doc['href'] }}">{{doc['href']}}</a></td></tr> 
 {% endfor %} 
 </table> 
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
