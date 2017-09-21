@@ -1,7 +1,8 @@
 #backup files from vi
 .*.swp
 
-data/*save
+data/lda*
+data/lsi*
 flaskapp/data/lda*
 flaskapp/data/lsi*
 
