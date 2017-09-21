@@ -1,6 +1,10 @@
 #backup files from vi
 .*.swp
 
+data/*save
+flaskapp/data/lda*
+flaskapp/data/lsi*
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
