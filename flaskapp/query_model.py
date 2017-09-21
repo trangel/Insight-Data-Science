@@ -1,49 +1,50 @@
 from collections import defaultdict
 from gensim import corpora, models, similarities
+from operator import itemgetter
+
+def filter_posts(sims,readability_fname):
+    import pandas as pd
+    from operator import itemgetter
+
+    r_score_min = 6.0 #filter minimum value
+
+
+
+    df_readability=pd.read_csv(readability_fname,index_col=0)
+    # Modify scores:
+    print("Original sims\n{}".format(sims[:10]))
+    for isim in range(len(sims)):
+        aid,score = sims[isim]
+        r_score=df_readability.loc[aid].values[0]
+        if r_score < r_score_min :
+            new_score = score * 0.1
+            print(r_score,score,new_score)
+            sims[isim]=(aid,score)
+    print("Modified sims\n{}".format(sims[:10]))
+    #  
+    sims2 = sorted(sims,key=itemgetter(1),reverse=True)
+    print(type(sims))
+    #sims2 = sims.sort(key=itemgetter(1),reverse=True)
+    print(type(sims2))
+    #print("Sorted sims\n{}".format(sims2[:10]))
+    return sims
+    
 
 def list_to_str(list1):
     str1 = ','.join(str(e) for e in list1)
     return str1
 
 
-def make_dictionary(documents):
-    """
-    construct a dictionary, i.e. mapping btwn word ids and their freq of occurence in the whole corpus
-    filter dictionary to remove stopwords and words occuring < min_count times
-    
-    input: documents is an iterable consisting of all the words in the corpus 
-    output: filtered dictionary
-    """
-
-    
-    dictionary = corpora.Dictionary(documents)
-
-    stop_words = nltk.corpus.stopwords.words('english') 
-    min_count = 2
-    stop_ids = [dictionary.token2id[word] for word in stop_words
-               if word in dictionary.token2id]
-    rare_ids = [id for id, freq in dictionary.dfs.items()
-                if freq < min_count]
-    dictionary.filter_tokens(stop_ids + rare_ids)
-    dictionary.compactify()
-    return(dictionary)
-
-def make_corpus(documents):
-    """
-    """
-    dictionary = make_dictionary(documents)
-    # convert corpus to vectors using bag-of-words representation, i.e. tuples of word indices and word counts
-    corpus = [dictionary.doc2bow(words) for words in documents]
-    return(corpus, dictionary)
-
-def query_model(query):
+def query_model(query,filter_posts_flag):
     import nltk
     import pandas as pd
     import pickle
     import os
 
     # Sources for forums:
-    forum_sources=["http://www.medhelp.org"]
+    forum_sources=['http://ehealthforum.com', 
+                   'http://www.medhelp.org',
+                   'http://www.reditt.com']
     # Sources for articles:
     article_sources=["https://www.autismparentingmagazine.com/"]
 
@@ -53,16 +54,15 @@ def query_model(query):
     lsi_model_fname=os.path.join(path_to_data,"lsi-model.save")
     lsi_matsim_fname=os.path.join(path_to_data,"lsi-matsim.save")
     # 
-    lda_model_fname=os.path.join(path_to_data,"lda-model-100.save")
-    lda_matsim_fname=os.path.join(path_to_data,"lda-matsim-100.save")
+    lda_model_fname=os.path.join(path_to_data,"lda-model.save")
+    lda_matsim_fname=os.path.join(path_to_data,"lda-matsim.save")
     # 
     tfidf_fname=os.path.join(path_to_data,"tfidf.save")    
     dictionary_fname=os.path.join(path_to_data,"dictionary.save")
+    readability_fname=os.path.join(path_to_data,"db-readability.csv")
 
     # Get categories and ids from dataset
     df = pd.read_csv(db_fname,index_col=0)
-    #df.head(2)
-    #ids=df.index
     
     # Read models and evaluate the score
     tfidf = models.TfidfModel.load(tfidf_fname)
@@ -92,7 +92,13 @@ def query_model(query):
 	# convert the query to LDA space
         vec_lda = lda[vec_bow] 
         sims = matsim[vec_lda]
-    
+   
+    # 
+    # Filter data with readability score:
+    #
+    if filter_posts_flag:
+        sims=filter_posts(sims,readability_fname)
+ 
     count_forums=0; count_articles=0;
     result_forums=[]
     result_articles=[]
@@ -119,3 +125,4 @@ def query_model(query):
                 return list_to_str(result_forums), list_to_str(result_articles)
 
     return list_to_str(result_forums), list_to_str(result_articles)
+
