@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Tonatiuh">
+    <link rel="icon" href="../logo/logo.png">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="starter-template.css" rel="stylesheet"> -->
+    <link href="blog.css" rel="stylesheet">
+
+    <!-- debuging -->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+<!-- Needed for dropdown menu -->
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<!-- end of dropmenu section -->
+
+  </head>
+
+  <body>
+
+   <div class="blog-masthead">
+  <div class="container">
+  <div class="row">
+    <div class="col-md-1">
+      <div class="container">
+        <img src="/static/logo.jpg" class="img-thumbnail" alt="Cinque Terre" width="80" height="40">
+      </div> <!-- container -->
+    </div> <!-- col --> 
+    <div class="col-md-4">
+      <div class="container">
+        <nav class="nav">
+          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link" href="http://www.autismxpert.pro/db_fancy">View database</a>
+          <a class="nav-link" href="#">About</a>
+        </nav>
+      </div> <!-- container -->
+    </div> <!-- col -->
+  </div> <!-- row -->
+  </div> <!-- container -->
+
+
+<br><br>
+
+<div class="container">
+  <div class="row">
+    
+    <div class="starter-template">
+        <!--<h2>Output Page</h2>-->
+        <p>Enter a question related to autism</p>
+    </div> <!-- starter template -->
+
+    <div class = "container">
+      <form  action="/output" method="GET">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="autism_query">Query:</label><br>
+            <input type="text" id="autism_query" name='autism_query' placeholder="e.g. Potty training. ">
+          </div> <!-- form-group -->
+        </div> <!-- col -->
+        <div class="col-md-3">
+          <label for="selection">or select one:</label>
+          <select class="form-control" id="selection" name="selection">
+            {% for question in question_list %}
+            <option>{{question['text']}}</option>
+            {% endfor %}
+        </div>
+          </select>
+        </div> <!-- col -->
+        <div class="col-md-1">
+          <div class="radio">
+            <label><input type="radio" name="filter_opt">Filter posts</label>
+          </div>
+        </div> <!-- col -->
+        <div class="col-md-1">
+          <br>
+          <div>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div> <!-- button -->
+        </div> <!-- col -->
+      </form>
+     </div> <!-- container -->
+
+
+  </div> <!-- row -->
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+
+  </div> <!-- /.container-->
+     </div>
+
+<!-- /.container -->
+    <hr>
+
+    <div class="container">
+     <h4>{{this_query}}</h4>
+
+      <div class="starter-template">
+     <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-6 col-lg-4">
+          <h3>Articles</h3>
+     <br>
+      {% for doc in article_docs %}
+          <h4>{{ doc['title'] }}</h4>
+          {{ doc['text_short']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
+     <br>
+      {% endfor %}
+      
+        </div>
+        <div class="col-6 col-lg-4">
+          <h3>Forum posts</h3>
+     <br>
+      {% for doc in autism_docs %}
+          <h4>{{ doc['title'] }}</h4>
+          {{ doc['text_short']}}
+          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
+     <br>
+      {% endfor %}
+      
+       </div>
+      </div>
+
+      </div>
+
+
+      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="../static/js/bootstrap.min.js"></script>
+
+     </div><!-- /.container -->
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+<script src="static/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
+

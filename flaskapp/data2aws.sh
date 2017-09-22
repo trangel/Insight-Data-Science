@@ -1,6 +1,16 @@
+scp -i ../aws/autismxpert.pem views.py ubuntu@13.59.215.199://home/ubuntu/Insight/flaskapp/.
+scp -i ../aws/autismxpert.pem query_model.py ubuntu@13.59.215.199://home/ubuntu/Insight/flaskapp/.
+scp -i ../aws/autismxpert.pem get_questions.py ubuntu@13.59.215.199://home/ubuntu/Insight/flaskapp/.
 
-scp -i ../aws/autismxpert.pem get_questions.py ubuntu@13.59.215.199://home/ubuntu/Insight-Data-Science.git/trunk/flaskapp/.
+#cd data
+#bash data2aws.sh
+#cd ..
+#
 
-scp -i ../aws/autismxpert.pem data/questions.dat ubuntu@13.59.215.199://home/ubuntu/Insight-Data-Science.git/trunk/flaskapp/data/.
+cd static
+bash data2aws.sh
+cd ..
 
-
+cd templates
+bash data2aws.sh
+cd ..

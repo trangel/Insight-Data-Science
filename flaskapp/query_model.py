@@ -6,28 +6,24 @@ def filter_posts(sims,readability_fname):
     import pandas as pd
     from operator import itemgetter
 
-    r_score_min = 6.0 #filter minimum value
+    r_score_min = 8.0 #  filter minimum value
+    length_filter = 50 # filter below 5th percentile of posts from experts
 
-
-
-    df_readability=pd.read_csv(readability_fname,index_col=0)
+    df=pd.read_csv(readability_fname,index_col=0)
     # Modify scores:
-    print("Original sims\n{}".format(sims[:10]))
     for isim in range(len(sims)):
         aid,score = sims[isim]
-        r_score=df_readability.loc[aid].values[0]
+        r_score=df.loc[aid,'Readability']
+        length=df.loc[aid,'Length']
         if r_score < r_score_min :
-            new_score = score * 0.1
-            print(r_score,score,new_score)
-            sims[isim]=(aid,score)
-    print("Modified sims\n{}".format(sims[:10]))
+            score = score * 0.01
+        if length < length_filter :
+            score = score * 0.01
+
+        sims[isim]=(aid,score)
     #  
     sims2 = sorted(sims,key=itemgetter(1),reverse=True)
-    print(type(sims))
-    #sims2 = sims.sort(key=itemgetter(1),reverse=True)
-    print(type(sims2))
-    #print("Sorted sims\n{}".format(sims2[:10]))
-    return sims
+    return sims2
     
 
 def list_to_str(list1):
@@ -59,7 +55,7 @@ def query_model(query,filter_posts_flag):
     # 
     tfidf_fname=os.path.join(path_to_data,"tfidf.save")    
     dictionary_fname=os.path.join(path_to_data,"dictionary.save")
-    readability_fname=os.path.join(path_to_data,"db-readability.csv")
+    readability_fname=os.path.join(path_to_data,"db-readability-length.csv")
 
     # Get categories and ids from dataset
     df = pd.read_csv(db_fname,index_col=0)

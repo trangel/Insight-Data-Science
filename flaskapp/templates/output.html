@@ -22,36 +22,48 @@
     <!-- debuging -->
     <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
-<!-- Needed for dropdown menu -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-<!-- end of dropmenu section -->
 
   </head>
 
   <body>
 
-   <div class="blog-masthead">
+    <!-- Navigation -->
+    <!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <nav class="nav">
-          <a class="nav-link active" href="#">Home</a>
-          <a class="nav-link" href="#">New features</a>
-          <a class="nav-link" href="#">Press</a>
-          <a class="nav-link" href="#">New hires</a>
-          <a class="nav-link" href="#">About</a>
-        </nav>
+        <a class="navbar-brand" href="#">
+          <!--<img src="/static/logo.jpg" width="70" height="30" alt=""> -->
+    <img src="/static/logo2.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+    AutismXpert
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="http://www.autismxpert.pro">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </nav>
 
 
-<br><br>
 
 <div class="container">
   <div class="row">
-  <div class="col-6 col-lg-4">
     
     <div class="starter-template">
         <!--<h2>Output Page</h2>-->
@@ -60,38 +72,36 @@
 
     <div class = "container">
       <form  action="/output" method="GET">
-        <div class="form-group">
-          <label for="autism_query">Query:</label>
-          <input type="text" id="autism_query" name='autism_query' placeholder="e.g. Potty training. ">
-        </div> <!-- form-group -->
-        <div>
-          <button type="submit" class="btn btn-primary">Find related information</button>
-        </div> <!-- button -->
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="autism_query">Query:</label><br>
+            <input type="text" id="autism_query" name='autism_query' placeholder="e.g. Potty training. ">
+          </div> <!-- form-group -->
+        </div> <!-- col -->
+        <div class="col-md-3">
+          <label for="selection">or select one:</label>
+          <select class="form-control" id="selection" name="selection">
+            {% for question in question_list %}
+            <option>{{question['text']}}</option>
+            {% endfor %}
+        </div>
+          </select>
+        </div> <!-- col -->
+        <div class="col-md-1">
+          <div class="radio">
+            <label><input type="radio" name="filter_opt">Filter posts</label>
+          </div>
+        </div> <!-- col -->
+        <div class="col-md-1">
+          <br>
+          <div>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div> <!-- button -->
+        </div> <!-- col -->
       </form>
      </div> <!-- container -->
-<!--
-     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-     <script src="../static/js/bootstrap.min.js"></script>
--->
 
-  </div> <!-- col -->
-  <div class="col-6 col-lg-4">
-    Choose a question
-    <div class="container">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Top parent's concerns
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          {% for question in question_list %}
-          <a class="dropdown-item" href={{question['href']}}>{{question['text']}}</a>
-          {% endfor %}
-        </div>
-      </div> <!-- dropdown -->
-    </div> <!-- container -->
-   <br>
-   You asked: <br><h4> {{this_query}}</h4>
-  </div> <!-- col -->
+
   </div> <!-- row -->
   </div>
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -101,23 +111,16 @@
      </div>
 
 <!-- /.container -->
-    <br>
     <hr>
 
     <div class="container">
+     <h4>{{this_query}}</h4>
 
       <div class="starter-template">
-<!--
-        <h1>Related posts </h1>
--->
-        <br>
-<!--        <p class="lead">Forums.<br>The result is {{result_forums}}</p>
-        <p class="lead">Articles.<br>The result is {{result_articles}}</p>
--->
      <!-- Example row of columns -->
       <div class="row">
         <div class="col-6 col-lg-4">
-          <h2>Articles</h2>
+          <h3>Articles</h3>
      <br>
       {% for doc in article_docs %}
           <h4>{{ doc['title'] }}</h4>
@@ -128,7 +131,7 @@
       
         </div>
         <div class="col-6 col-lg-4">
-          <h2>Forum posts</h2>
+          <h3>Forum posts</h3>
      <br>
       {% for doc in autism_docs %}
           <h4>{{ doc['title'] }}</h4>
