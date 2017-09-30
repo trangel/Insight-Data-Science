@@ -26,6 +26,15 @@ con = psycopg2.connect(database = dbname, user = username, password=password, ho
 #       title = 'Home', user = { 'nickname': 'Miguel' },
 #       )
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @app.route('/db_fancy')
 def AutismExpert_page_fancy():
     sql_query = """
@@ -52,8 +61,14 @@ def AutismExpert_output():
     filter_opt = request.args.get('filter_opt')
     selection = request.args.get('selection')
 
+    question_list = get_questions()
+
+    # Check inputs:
     if text == "":
-        text = selection
+        text = str(selection)
+
+    if text == 'None' :
+        return render_template("input.html", question_list = question_list)
 
     if filter_opt == None:
         filter_posts_flag=False
@@ -64,7 +79,6 @@ def AutismExpert_output():
 #   This returns a list of article ids
     result_forums, result_articles = query_model(text,filter_posts_flag)
 #
-    question_list = get_questions()
 #   
 #   Query db
 #
@@ -87,5 +101,10 @@ def AutismExpert_output():
         for i in range(0,query_results.shape[0]):
             article_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text_short=query_results.iloc[i]['text_short']))
 
-    return render_template("output.html", autism_docs=forum_docs, forum_docs = forum_docs, article_docs = article_docs, question_list = question_list , this_query = text)
+    no_results=False
+    if len(forum_docs) + len(article_docs) == 0 :
+        no_results=True
+    
+
+    return render_template("output.html", forum_docs = forum_docs, article_docs = article_docs, question_list = question_list , this_query = text, filter_posts_flag = filter_posts_flag, no_results = no_results )
 

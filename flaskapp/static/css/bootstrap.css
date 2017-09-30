@@ -8183,3 +8183,19 @@ a.text-dark:focus, a.text-dark:hover {
   visibility: hidden !important;
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.daysCheckbox1{
+zoom:1;
+
+}
+.daysCheckbox2{
+zoom:1.5;
+}
+.daysCheckbox3{
+zoom:2;
+
+}
+.daysCheckbox4{
+zoom:2.5;
+
+}
+.checkbox-custom-label { font-size:200%; }

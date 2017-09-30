@@ -2,19 +2,24 @@ from collections import defaultdict
 from gensim import corpora, models, similarities
 from operator import itemgetter
 
-def filter_posts(sims,readability_fname):
+def filter_posts(sims,readability_fname, bad_words_fname ):
     import pandas as pd
     from operator import itemgetter
 
     r_score_min = 8.0 #  filter minimum value
     length_filter = 50 # filter below 5th percentile of posts from experts
 
-    df=pd.read_csv(readability_fname,index_col=0)
+    df_readability=pd.read_csv(readability_fname,index_col=0)
+    df_bad_words = pd.read_csv(bad_words_fname,index_col=0)
     # Modify scores:
     for isim in range(len(sims)):
         aid,score = sims[isim]
-        r_score=df.loc[aid,'Readability']
-        length=df.loc[aid,'Length']
+        r_score=df_readability.loc[aid,'Readability']
+        length=df_readability.loc[aid,'Length']
+        use_bad_words = df_bad_words.loc[aid,'use dirty words']
+        tokens = df_bad_words.loc[aid,'tokens']
+        if use_bad_words == 1 :
+            score = 0
         if r_score < r_score_min :
             score = score * 0.01
         if length < length_filter :
@@ -36,6 +41,7 @@ def query_model(query,filter_posts_flag):
     import pandas as pd
     import pickle
     import os
+    from nltk.stem.wordnet import WordNetLemmatizer
 
     # Sources for forums:
     forum_sources=['http://ehealthforum.com', 
@@ -56,6 +62,7 @@ def query_model(query,filter_posts_flag):
     tfidf_fname=os.path.join(path_to_data,"tfidf.save")    
     dictionary_fname=os.path.join(path_to_data,"dictionary.save")
     readability_fname=os.path.join(path_to_data,"db-readability-length.csv")
+    bad_words_fname=os.path.join(path_to_data,"db-bad-words.csv")
 
     # Get categories and ids from dataset
     df = pd.read_csv(db_fname,index_col=0)
@@ -77,8 +84,16 @@ def query_model(query,filter_posts_flag):
     # Tokenize data
     tokenizer = nltk.RegexpTokenizer(r'\w+')
     text = query.lower()
-    ttext = tokenizer.tokenize(text)
-    vec_bow = dictionary.doc2bow(ttext)
+    tokens = tokenizer.tokenize(text)
+
+    # Lemmatize
+
+    lemas=[]
+    for word in tokens:
+        ww=WordNetLemmatizer().lemmatize(word,'v')
+        lemas.append(ww)
+
+    vec_bow = dictionary.doc2bow(lemas)
     
     if model == "lsi":
 	# convert the query to LSI space
@@ -93,7 +108,7 @@ def query_model(query,filter_posts_flag):
     # Filter data with readability score:
     #
     if filter_posts_flag:
-        sims=filter_posts(sims,readability_fname)
+        sims=filter_posts(sims,readability_fname,bad_words_fname)
  
     count_forums=0; count_articles=0;
     result_forums=[]
