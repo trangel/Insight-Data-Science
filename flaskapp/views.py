@@ -36,7 +36,7 @@ def about():
 
 
 @app.route('/db_fancy')
-def AutismExpert_page_fancy():
+def page_fancy():
     sql_query = """
                SELECT * FROM \"articles-n-forums-posts\" WHERE title LIKE '%autism%';
                 """
@@ -52,8 +52,35 @@ def index():
     question_list = get_questions()
     return render_template("input.html", question_list = question_list)
 
+
+@app.route('/output_text')
+def output_text():
+    question_list = get_questions()
+    #
+    # Get doc id to show
+    #
+    post_id = request.args.get('post_id')
+    #
+    if str(post_id) == 'None' :
+        return render_template("input.html", question_list = question_list)
+    #
+    # Get text from db:
+    #
+    query = "SELECT \"post id\", title, text, href, href_short FROM \"articles-n-forums-posts\" WHERE \"post id\"  = {}".format(post_id)
+    query_results=pd.read_sql_query(query,con)
+    #
+    doc = dict(
+        post_id    = query_results.iloc[0]['post id'],
+        title      = query_results.iloc[0]['title'], 
+        text       = query_results.iloc[0]['text'],
+        href       = query_results.iloc[0]['href'], 
+        href_short = query_results.iloc[0]['href_short']
+        )
+
+    return render_template("output_text.html", doc = doc, question_list = question_list)
+
 @app.route('/output')
-def AutismExpert_output():
+def output():
     #
     # Get query text from user:
     #
@@ -85,21 +112,32 @@ def AutismExpert_output():
 #   Results from forums:
     forum_docs = []
     if len(result_forums) > 0 :
-        query = "SELECT title, text_short, href FROM \"articles-n-forums-posts\" WHERE \"post id\" IN ({})".format(result_forums)
+        query = "SELECT \"post id\", title, text_short, href, href_short FROM \"articles-n-forums-posts\" WHERE \"post id\" IN ({})".format(result_forums)
         query_results=pd.read_sql_query(query,con)
 #       Convert result to list of dictionaries to handle in HTML page:
         for i in range(0,query_results.shape[0]):
-            forum_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text_short=query_results.iloc[i]['text_short']))
+            forum_docs.append(dict(
+                post_id    = query_results.iloc[i]['post id'],
+                title      = query_results.iloc[i]['title'], 
+                text_short = query_results.iloc[i]['text_short'],
+                href       = query_results.iloc[i]['href'], 
+                href_short = query_results.iloc[i]['href_short']
+                ))
 #
 #   Results from articles:
     article_docs = []
     if len(result_articles) > 0 :
-        query = "SELECT title, text_short, href FROM \"articles-n-forums-posts\" WHERE \"post id\" IN ({})".format(result_articles)
+        query = "SELECT \"post id\", title, text_short, href, href_short FROM \"articles-n-forums-posts\" WHERE \"post id\" IN ({})".format(result_articles)
         query_results=pd.read_sql_query(query,con)
 
 #       Convert result to list of dictionaries to handle in HTML page:
         for i in range(0,query_results.shape[0]):
-            article_docs.append(dict(title=query_results.iloc[i]['title'], href=query_results.iloc[i]['href'], text_short=query_results.iloc[i]['text_short']))
+            article_docs.append(dict(
+                post_id    = query_results.iloc[i]['post id'],
+                title      = query_results.iloc[i]['title'], 
+                text_short = query_results.iloc[i]['text_short'],
+                href       = query_results.iloc[i]['href'], 
+                href_short = query_results.iloc[i]['href_short']))
 
     no_results=False
     if len(forum_docs) + len(article_docs) == 0 :

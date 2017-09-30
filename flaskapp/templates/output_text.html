@@ -8,12 +8,11 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="Tonatiuh">
-    <link rel="icon" href="../logo/logo.png">
 
     <title>Starter Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <!-- <link href="starter-template.css" rel="stylesheet"> -->
@@ -22,44 +21,41 @@
     <!-- debuging -->
     <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
-<!-- Needed for dropdown menu -->
-<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
--->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-<!-- end of dropmenu section -->
 
   </head>
 
   <body>
 
-   <div class="blog-masthead">
-  <div class="container">
-  <div class="row">
-    <div class="col-md-1">
+    <!-- Navigation -->
+    <!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <img src="/static/logo.jpg" class="img-thumbnail" alt="Cinque Terre" width="80" height="40">
-      </div> <!-- container -->
-    </div> <!-- col --> 
-    <div class="col-md-4">
-      <div class="container">
-        <nav class="nav">
-          <a class="nav-link active" href="#">Home</a>
-          <a class="nav-link" href="http://www.autismxpert.pro/db_fancy">View database</a>
-          <a class="nav-link" href="#">About</a>
-        </nav>
-      </div> <!-- container -->
-    </div> <!-- col -->
-  </div> <!-- row -->
-  </div> <!-- container -->
+    <img src="/static/logo3 text.png" width="200" height="40" class="d-inline-block align-top" alt="">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="http://www.autismxpert.pro">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://www.autismxpert.pro/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://www.autismxpert.pro/contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
 
-<br><br>
 
 <div class="container">
   <div class="row">
@@ -73,22 +69,29 @@
       <form  action="/output" method="GET">
         <div class="col-md-2">
           <div class="form-group">
-            <label for="autism_query">Query:</label><br>
+            <label for="autism_query"><h4>Query:</h4></label><br>
             <input type="text" id="autism_query" name='autism_query' placeholder="e.g. Potty training. ">
           </div> <!-- form-group -->
         </div> <!-- col -->
         <div class="col-md-3">
-          <label for="selection">or select one:</label>
-          <select class="form-control" id="selection" name="selection">
+
+          <label for="selection"><h4>or select one:</h4></label>
+          <select class="form-control" id="selection" name="selection" >
+            <option disabled selected value> -- select an option -- </option>
             {% for question in question_list %}
             <option>{{question['text']}}</option>
             {% endfor %}
+
         </div>
           </select>
         </div> <!-- col -->
-        <div class="col-md-1">
-          <div class="radio">
-            <label><input type="radio" name="filter_opt">Filter posts</label>
+        <div class="col-md-2">
+          <div class="radio active">
+            {% if filter_posts_flag == True %}
+            <label><input checked type="checkbox" class="daysCheckbox2" name="filter_opt"><h4>Quality filter</h4></label> 
+            {% else %}
+            <label><input type="checkbox" class="daysCheckbox2" name="filter_opt"><h4>Quality filter</h4></label>
+            {% endif %}
           </div>
         </div> <!-- col -->
         <div class="col-md-1">
@@ -113,37 +116,12 @@
     <hr>
 
     <div class="container">
-     <h4>{{this_query}}</h4>
-
       <div class="starter-template">
-     <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-6 col-lg-4">
-          <h3>Articles</h3>
-     <br>
-      {% for doc in article_docs %}
           <h4>{{ doc['title'] }}</h4>
-          {{ doc['text_short']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
-     <br>
-      {% endfor %}
-      
-        </div>
-        <div class="col-6 col-lg-4">
-          <h3>Forum posts</h3>
-     <br>
-      {% for doc in autism_docs %}
-          <h4>{{ doc['title'] }}</h4>
-          {{ doc['text_short']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
-     <br>
-      {% endfor %}
-      
-       </div>
+          {{ doc['text']}}
+          <br>Source: <a href={{doc['href']}}>{{doc['href_short']}}</a>
+          <br><p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Go to post&raquo;</a></p>
       </div>
-
-      </div>
-
 
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="../static/js/bootstrap.min.js"></script>

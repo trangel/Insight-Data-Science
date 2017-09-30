@@ -116,7 +116,16 @@
     <hr>
 
     <div class="container">
-     <h3>{{this_query}}</h3>
+     {% if filter_posts_flag == True %}
+        <h3 style="color:#0062cc;">{{this_query}}
+        &nbsp &nbsp
+       <img src="/static/expert-icon.png" width="40" height="40" class="d-inline-block align-top" alt="">
+        </h3>
+     {% else %}
+        <h3 style="color:#0062cc;">{{this_query}} </h3>
+
+     {% endif %}
+     <!--<h3 style="color:#0069d9;">{{this_query}}</h3>-->
 
      {% if no_results == True %}
         <h3> Sorry, no results found </h3>
@@ -131,25 +140,19 @@
       {% for doc in article_docs %}
           <h4>{{ doc['title'] }}</h4>
           {{ doc['text_short']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
+          <p><a class="btn btn-primary" href="http://www.autismxpert.pro/output_text?post_id={{doc['post_id']}}" role="button">Continue reading &raquo;</a></p>
      <br>
       {% endfor %}
       
         </div>
         <div class="col-6 col-lg-4">
-          {% if filter_posts_flag == True %}
-          <h3>Forum posts 
-     &nbsp &nbsp
-    <img src="/static/expert-icon.png" width="40" height="40" class="d-inline-block align-top" alt="">
-          </h3>
-          {% else %}
           <h3>Forum posts</h3>
-          {% endif %}
      <br>
       {% for doc in forum_docs %}
           <h4>{{ doc['title'] }}</h4>
           {{ doc['text_short']}}
-          <p><a class="btn btn-primary" href="{{doc['href']}}" role="button">Continue reading &raquo;</a></p>
+          <br>Source: <a href={{doc['href']}}>{{doc['href_short']}}</a>
+          <p><a class="btn btn-primary" href="http://www.autismxpert.pro/output_text?post_id={{doc['post_id']}}" role="button">Continue reading &raquo;</a></p>
      <br>
       {% endfor %}
       

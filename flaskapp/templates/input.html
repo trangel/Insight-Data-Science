@@ -79,6 +79,7 @@
         <div class="col-md-3">
           <label for="selection"><h4>or select one:</h4></label>
           <select class="form-control" id="selection" name="selection">
+            <option disabled selected value> -- select an option -- </option>
             {% for question in question_list %}
             <option>{{question['text']}}</option>
             {% endfor %}
